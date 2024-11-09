@@ -1,0 +1,50 @@
+services:
+  backend:
+    build: ./backend
+    ports: 
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+      - maven-repo:/root/.m2
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=fluxcrm
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+
+  fronted:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes: 
+      - ./frontend:/app
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: fluxcrm
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  maven-repo:
+    driver: local
+  postgres-data:
+    driver: local
+  pgadmin-data:
+    driver: local
