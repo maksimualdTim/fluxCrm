@@ -9,5 +9,5 @@ public class FluxCrmApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FluxCrmApplication.class, args);
 	}
-
+	
 }
