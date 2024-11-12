@@ -20,7 +20,6 @@ import uz.fluxCrm.fluxCrm.crm.dto.StatusDto;
 import uz.fluxCrm.fluxCrm.crm.entity.Pipeline;
 import uz.fluxCrm.fluxCrm.crm.service.LeadService;
 import uz.fluxCrm.fluxCrm.crm.service.PipelineService;
-import uz.fluxCrm.fluxCrm.crm.service.StatusService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class LeadsController {
 	private final LeadService leadService;
 	private final PipelineService pipelineService;
-	private final StatusService statusService;
 
 
 	@GetMapping({"", "/"})
@@ -74,23 +72,23 @@ public class LeadsController {
 	@GetMapping("/pipelines/{pipelineId}/statuses")
 	public List<StatusDto> getStatuses(@PathVariable Long pipelineId) {
 		Pipeline pipeline = pipelineService.findById(pipelineId);
-		return statusService.getStatusesDto(pipeline);
+		return pipelineService.getStatusesDto(pipeline);
 	}
 
 	@PostMapping("/pipelines/{pipelineId}/statuses")
 	@ResponseStatus(HttpStatus.CREATED)
 	public StatusDto createStatus(@PathVariable Long pipelineId, @Valid @RequestBody StatusDto statusDto) {
-		return statusService.createStatusDto(statusDto.getName(), pipelineId);
+		return pipelineService.createStatusDto(statusDto.getName(), pipelineId);
 	}
 	
 	@GetMapping("/pipelines/{pipelineId}/statuses/{statusId}")
 	public StatusDto getStatusById(@PathVariable Long pipelineId, @PathVariable Long statusId) {
 		Pipeline pipeline = pipelineService.findById(pipelineId);
-		return statusService.getStatusDto(pipeline, statusId);
+		return pipelineService.getStatusDto(pipeline, statusId);
 	}
 
 	@PatchMapping("/pipelines/{pipelineId}/statuses/{statusId}")
 	public StatusDto updateStatus(@PathVariable Long pipelineId, @PathVariable Long statusId, @Valid @RequestBody StatusDto statusDto) {
-		return statusService.updateStatusDto(statusDto.getName(), pipelineId, statusId);
+		return pipelineService.updateStatusDto(statusDto.getName(), pipelineId, statusId);
 	}
 }

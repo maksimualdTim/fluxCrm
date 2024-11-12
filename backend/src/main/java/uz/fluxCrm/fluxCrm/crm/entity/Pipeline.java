@@ -2,6 +2,8 @@ package uz.fluxCrm.fluxCrm.crm.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,5 +24,6 @@ public class Pipeline {
     private String name;
 
     @OneToMany(mappedBy = "pipeline", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Status> statuses;
 }

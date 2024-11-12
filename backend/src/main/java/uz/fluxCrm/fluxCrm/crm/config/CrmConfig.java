@@ -7,16 +7,15 @@ import org.springframework.context.annotation.Profile;
 
 import uz.fluxCrm.fluxCrm.crm.entity.Pipeline;
 import uz.fluxCrm.fluxCrm.crm.service.PipelineService;
-import uz.fluxCrm.fluxCrm.crm.service.StatusService;
 
 @Configuration
 @Profile("!test")
 public class CrmConfig {
     @Bean
-    CommandLineRunner initPipeline(PipelineService pipelineService, StatusService statusService) {
+    CommandLineRunner initPipeline(PipelineService pipelineService) {
         return args -> {
 			Pipeline pipeline = pipelineService.createDefault();
-			statusService.createDefault(pipeline);
+			pipelineService.createDefaultStatuses(pipeline);
         };
     }	
 }

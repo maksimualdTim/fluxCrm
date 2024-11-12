@@ -36,7 +36,6 @@ import uz.fluxCrm.fluxCrm.crm.entity.Pipeline;
 import uz.fluxCrm.fluxCrm.crm.repository.StatusRepository;
 import uz.fluxCrm.fluxCrm.crm.service.DefaultLeadService;
 import uz.fluxCrm.fluxCrm.crm.service.DefaultPipelineService;
-import uz.fluxCrm.fluxCrm.crm.service.DefaultStatusService;
 import uz.fluxCrm.fluxCrm.crm.util.TestObjectFactory;
 
 @WebMvcTest(LeadsController.class)
@@ -45,12 +44,8 @@ public class LeadsControllerTest {
     @MockBean
     DefaultLeadService leadService;
 
-
     @MockBean
     DefaultPipelineService pipelineService;
-
-    @MockBean
-    DefaultStatusService statusService;
 
     @MockBean
     StatusRepository statusRepository;
@@ -192,7 +187,7 @@ public class LeadsControllerTest {
     void getStatuses_PipelineFound_ReturnsOkResponse() throws Exception {
         Pipeline pipeline = TestObjectFactory.createTestPipeline();
         when(pipelineService.findById(anyLong())).thenReturn(pipeline);
-        when(statusService.getStatusesDto(any(Pipeline.class))).thenReturn(TestObjectFactory.createTestStatusesDto());
+        when(pipelineService.getStatusesDto(any(Pipeline.class))).thenReturn(TestObjectFactory.createTestStatusesDto());
 
         mockMvc.perform(get("/leads/pipelines/{pipelineId}/statuses", 1L)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -219,7 +214,7 @@ public class LeadsControllerTest {
         StatusDto status = TestObjectFactory.createTestPipelineDto().getStatuses().getFirst();
     
         when(pipelineService.findById(anyLong())).thenReturn(pipeline);
-        when(statusService.getStatusDto(any(Pipeline.class), anyLong())).thenReturn(status);
+        when(pipelineService.getStatusDto(any(Pipeline.class), anyLong())).thenReturn(status);
     
         mockMvc.perform(get("/leads/pipelines/{pipelineId}/statuses/{statusId}", 1L, 1L)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -244,7 +239,7 @@ public class LeadsControllerTest {
         Pipeline pipeline = TestObjectFactory.createTestPipeline();
 
         when(pipelineService.findById(anyLong())).thenReturn(pipeline);
-        when(statusService.getStatusDto(any(Pipeline.class), anyLong())).thenThrow(new EntityNotFoundException("Status not found by ID: 1"));
+        when(pipelineService.getStatusDto(any(Pipeline.class), anyLong())).thenThrow(new EntityNotFoundException("Status not found by ID: 1"));
     
         mockMvc.perform(get("/leads/pipelines/{pipelineId}/statuses/{statusId}", 1L, 1L)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -260,7 +255,7 @@ public class LeadsControllerTest {
         pipelineDto.setName("Test Pipeline");
 
         when(pipelineService.createPipelineDto(anyString())).thenReturn(TestObjectFactory.createTestPipelineDto());
-        when(statusService.createDefault(any(Pipeline.class))).thenReturn(List.of(TestObjectFactory.createStatus()));
+        when(pipelineService.createDefaultStatuses(any(Pipeline.class))).thenReturn(List.of(TestObjectFactory.createStatus()));
 
         mockMvc.perform(post("/leads/pipelines")
         .contentType(MediaType.APPLICATION_JSON)
@@ -293,7 +288,7 @@ public class LeadsControllerTest {
         StatusDto statusDto = new StatusDto();
         statusDto.setName("Test Status");
 
-        when(statusService.createStatusDto(anyString(), anyLong())).thenReturn(TestObjectFactory.createStatusDto());
+        when(pipelineService.createStatusDto(anyString(), anyLong())).thenReturn(TestObjectFactory.createStatusDto());
         
         mockMvc.perform(post("/leads/pipelines/{pipelineId}/statuses", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -309,7 +304,7 @@ public class LeadsControllerTest {
         StatusDto statusDto = new StatusDto();
         statusDto.setName("Test Status");
 
-        when(statusService.createStatusDto(anyString(), anyLong())).thenThrow(new EntityNotFoundException("Pipeline not found by ID: 1"));
+        when(pipelineService.createStatusDto(anyString(), anyLong())).thenThrow(new EntityNotFoundException("Pipeline not found by ID: 1"));
         
         mockMvc.perform(post("/leads/pipelines/{pipelineId}/statuses", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -386,7 +381,7 @@ public class LeadsControllerTest {
     void testUpdateStatus_ValidNamePipelineFoundStatusFound_ReturnsOkResponse() throws Exception{
         StatusDto statusDto = new StatusDto();
         statusDto.setName("Test Status");
-        when(statusService.updateStatusDto(anyString(), anyLong(), anyLong())).thenReturn(TestObjectFactory.createStatusDto());
+        when(pipelineService.updateStatusDto(anyString(), anyLong(), anyLong())).thenReturn(TestObjectFactory.createStatusDto());
 
         mockMvc.perform(patch("/leads/pipelines/{pipelineId}/statuses/{statusId}", 1L, 1L)
             .contentType(MediaType.APPLICATION_JSON)
@@ -401,7 +396,7 @@ public class LeadsControllerTest {
     void testUpdateStatus_ValidNamePipelineFoundStatusNotFound_ReturnsNotFoundResponse() throws Exception{
         StatusDto statusDto = new StatusDto();
         statusDto.setName("Test Status");
-        when(statusService.updateStatusDto(anyString(), anyLong(), anyLong())).thenThrow(new EntityNotFoundException("Status not found by ID: 1"));
+        when(pipelineService.updateStatusDto(anyString(), anyLong(), anyLong())).thenThrow(new EntityNotFoundException("Status not found by ID: 1"));
 
         mockMvc.perform(patch("/leads/pipelines/{pipelineId}/statuses/{statusId}", 1L, 1L)
             .contentType(MediaType.APPLICATION_JSON)
@@ -415,7 +410,7 @@ public class LeadsControllerTest {
     void testUpdateStatus_ValidNamePipelineNotFoundStatusFound_ReturnsNotFoundResponse() throws Exception{
         StatusDto statusDto = new StatusDto();
         statusDto.setName("Test Status");
-        when(statusService.updateStatusDto(anyString(), anyLong(), anyLong())).thenThrow(new EntityNotFoundException("Pipeline not found by ID: 1"));
+        when(pipelineService.updateStatusDto(anyString(), anyLong(), anyLong())).thenThrow(new EntityNotFoundException("Pipeline not found by ID: 1"));
 
         mockMvc.perform(patch("/leads/pipelines/{pipelineId}/statuses/{statusId}", 1L, 1L)
             .contentType(MediaType.APPLICATION_JSON)

@@ -1,5 +1,7 @@
 package uz.fluxCrm.fluxCrm.crm.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,5 +25,6 @@ public class Lead {
 
     @ManyToOne
     @JoinColumn(name = "status_id")
+    @JsonBackReference
     private Status status;
 }

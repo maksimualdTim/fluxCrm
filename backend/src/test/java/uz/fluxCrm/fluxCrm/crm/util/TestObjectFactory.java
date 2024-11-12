@@ -26,6 +26,14 @@ public class TestObjectFactory {
         return status;
     }
 
+    public static Pipeline createPipeline() {
+        Pipeline pipeline = new Pipeline();
+        pipeline.setId(1L);
+        pipeline.setName("Test Pipeline");
+        pipeline.setStatuses(List.of(createStatus()));
+        return pipeline;
+    }
+
     public static StatusDto createStatusDto() {
         StatusDto status = new StatusDto();
         status.setId(1L);

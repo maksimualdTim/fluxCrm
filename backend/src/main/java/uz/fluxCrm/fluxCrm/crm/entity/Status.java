@@ -2,6 +2,9 @@ package uz.fluxCrm.fluxCrm.crm.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,9 +27,11 @@ public class Status {
 
     @ManyToOne
     @JoinColumn(name = "pipeline_id")
+    @JsonBackReference
     private Pipeline pipeline;
 
     @OneToMany(mappedBy = "status")
+    @JsonManagedReference
     private List<Lead> leads;
 
 }
