@@ -19,6 +19,7 @@ import uz.fluxCrm.fluxCrm.crm.repository.StatusRepository;
 public class DefaultStatusService implements StatusService{
     private final StatusRepository statusRepository;
     private final StatusMapper statusMapper;
+    private final PipelineService pipelineService;
 
     public List<Status> createDefault(Pipeline pipeline) {
         List<Status> statuses = new ArrayList<Status>();
@@ -52,5 +53,32 @@ public class DefaultStatusService implements StatusService{
     @Override
     public StatusDto getStatusDto(Pipeline pipeline, Long id) {
         return statusMapper.toResponse(getStatus(pipeline, id));
+    }
+
+    @Override
+    public Status createStatus(String name, Long pipelineId) {
+        Pipeline pipeline = pipelineService.findById(pipelineId);
+        Status status = new Status();
+        status.setName(name);
+        status.setPipeline(pipeline);
+        return statusRepository.save(status);
+    }
+
+    @Override
+    public StatusDto createStatusDto(String name, Long pipelineId) {
+        return statusMapper.toResponse(createStatus(name, pipelineId));
+    }
+
+    @Override
+    public Status updateStatus(String name, Long pipelineId, Long statusId) {
+        Pipeline pipeline = pipelineService.findById(pipelineId);
+        Status status = getStatus(pipeline, statusId);
+        status.setName(name);
+        return statusRepository.save(status);
+    }
+
+    @Override
+    public StatusDto updateStatusDto(String name, Long pipelineId, Long statusId) {
+        return statusMapper.toResponse(updateStatus(name, pipelineId, statusId));
     }
 }

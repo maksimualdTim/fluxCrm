@@ -77,5 +77,27 @@ public class DefaultPipelineService implements PipelineService{
         return pipelineMapper.toResponse(pipelines);
     }
 
-    
+    @Override
+    public PipelineDto createPipelineDto(String name) {
+        return pipelineMapper.toResponse(creatPipeline(name));
+    }
+
+    @Override
+    public Pipeline creatPipeline(String name) {
+        Pipeline pipeline = new Pipeline();
+        pipeline.setName(name);
+        return pipelineRepository.save(pipeline);
+    }
+
+    @Override
+    public Pipeline updatePipeline(String name, Long pipelineId) {
+        Pipeline pipeline = findById(pipelineId);
+        pipeline.setName(name);
+        return pipelineRepository.save(pipeline);
+    }
+
+    @Override
+    public PipelineDto updatePipelineDto(String name, Long pipelineId) {
+        return pipelineMapper.toResponse(updatePipeline(name, pipelineId));
+    }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -54,9 +55,20 @@ public class LeadsController {
 		return pipelineService.getPipelinesDto();
 	}
 	
+	@PostMapping("/pipelines")
+	@ResponseStatus(HttpStatus.CREATED)
+	public PipelineDto createPipeline(@Valid @RequestBody PipelineDto pipelineDto) {
+		return pipelineService.createPipelineDto(pipelineDto.getName());
+	}
+
 	@GetMapping("/pipelines/{pipelineId}")
 	public PipelineDto getPipelineById(@PathVariable Long pipelineId) {
 		return pipelineService.findByIdDto(pipelineId);
+	}
+
+	@PatchMapping("/pipelines/{pipelineId}")
+	public PipelineDto updatePipeline(@PathVariable Long pipelineId, @Valid @RequestBody PipelineDto pipelineDto) {
+		return pipelineService.updatePipelineDto(pipelineDto.getName(), pipelineId);
 	}
 	
 	@GetMapping("/pipelines/{pipelineId}/statuses")
@@ -64,10 +76,21 @@ public class LeadsController {
 		Pipeline pipeline = pipelineService.findById(pipelineId);
 		return statusService.getStatusesDto(pipeline);
 	}
+
+	@PostMapping("/pipelines/{pipelineId}/statuses")
+	@ResponseStatus(HttpStatus.CREATED)
+	public StatusDto createStatus(@PathVariable Long pipelineId, @Valid @RequestBody StatusDto statusDto) {
+		return statusService.createStatusDto(statusDto.getName(), pipelineId);
+	}
 	
 	@GetMapping("/pipelines/{pipelineId}/statuses/{statusId}")
 	public StatusDto getStatusById(@PathVariable Long pipelineId, @PathVariable Long statusId) {
 		Pipeline pipeline = pipelineService.findById(pipelineId);
 		return statusService.getStatusDto(pipeline, statusId);
+	}
+
+	@PatchMapping("/pipelines/{pipelineId}/statuses/{statusId}")
+	public StatusDto updateStatus(@PathVariable Long pipelineId, @PathVariable Long statusId, @Valid @RequestBody StatusDto statusDto) {
+		return statusService.updateStatusDto(statusDto.getName(), pipelineId, statusId);
 	}
 }

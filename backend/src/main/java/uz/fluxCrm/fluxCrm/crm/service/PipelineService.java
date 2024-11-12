@@ -25,4 +25,12 @@ public interface PipelineService {
     public Pipeline findById(Long id);
 
     public PipelineDto findByIdDto(Long id);
+
+    public PipelineDto createPipelineDto(String name);
+
+    public Pipeline creatPipeline(String name);
+
+    public PipelineDto updatePipelineDto(String name, Long pipelineId);
+
+    public Pipeline updatePipeline(String name, Long pipelineId);
 }

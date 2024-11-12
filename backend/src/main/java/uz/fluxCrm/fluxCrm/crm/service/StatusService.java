@@ -14,4 +14,12 @@ public interface StatusService {
     public StatusDto getStatusDto(Pipeline pipeline, Long id);
 
     public Status getStatus(Pipeline pipeline, Long id);
+
+    public Status createStatus(String name, Long pipelineId);
+
+    public StatusDto createStatusDto(String name, Long pipelineId);
+
+    public Status updateStatus(String name, Long pipelineId, Long statusId);
+
+    public StatusDto updateStatusDto(String name, Long pipelineId, Long statusId);
 }
