@@ -1,11 +1,9 @@
 package uz.fluxCrm.fluxCrm.crm.entity;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,10 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Getter;
@@ -25,33 +20,20 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Lead {
+public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
-    private Long price;
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Lead> leads;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id")
-    @JsonBackReference
-    private Status status;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-        name = "lead_contact",
-        joinColumns = @JoinColumn(name = "lead_id"),
-        inverseJoinColumns = @JoinColumn(name = "contact_id")
-    )
-    @JsonIgnoreProperties("lead")
-    private Set<Contact> contacts = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "company_id")
-    @JsonBackReference
-    private Company company;
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Contact> contacts;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
