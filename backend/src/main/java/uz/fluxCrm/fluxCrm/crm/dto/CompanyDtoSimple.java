@@ -1,7 +1,6 @@
 package uz.fluxCrm.fluxCrm.crm.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,14 +10,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ContactDto {
+public class CompanyDtoSimple {
     private Long id;
 
-    private String name;
-
-    private List<LeadDtoSimple> leads;
-    
-    private CompanyDto company;
+    private String name;    
 
     @JsonProperty("created_at")
     @PastOrPresent(message = "The created_at date must be in the past or present")

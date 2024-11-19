@@ -14,6 +14,9 @@ public class StatusDto {
     @NotBlank
     private String name;
 
+    @JsonProperty("is_main")
+    private boolean isMain;
+
     @JsonProperty("pipeline_id")
     private Long pipelineId;
 }

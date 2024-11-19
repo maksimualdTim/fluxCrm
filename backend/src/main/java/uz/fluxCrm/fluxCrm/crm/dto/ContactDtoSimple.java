@@ -11,15 +11,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ContactDto {
+public class ContactDtoSimple {
     private Long id;
 
     private String name;
-
-    private List<LeadDtoSimple> leads;
     
-    private CompanyDto company;
-
     @JsonProperty("created_at")
     @PastOrPresent(message = "The created_at date must be in the past or present")
     private LocalDateTime createdAt;

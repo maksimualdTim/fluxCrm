@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import uz.fluxCrm.fluxCrm.crm.dto.ContactDto;
-import uz.fluxCrm.fluxCrm.crm.entity.Contact;
 
 public interface ContactService {
     public Page<ContactDto> getContactsDto(Pageable pageable);

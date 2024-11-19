@@ -1,7 +1,6 @@
 package uz.fluxCrm.fluxCrm.crm.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,7 +11,7 @@ import uz.fluxCrm.fluxCrm.crm.validation.StatusExists;
 
 @Getter
 @Setter
-public class LeadDto {
+public class LeadDtoSimple {
     private Long id;
 
     private String name;
@@ -26,10 +25,6 @@ public class LeadDto {
     @StatusExists(message = "Status does not exists")
     @JsonProperty("status_id")
     private Long statusId;
-
-    private List<ContactDtoSimple> contacts;
-
-    private CompanyDtoSimple company;
 
     @JsonProperty("created_at")
     private LocalDateTime createdAt;

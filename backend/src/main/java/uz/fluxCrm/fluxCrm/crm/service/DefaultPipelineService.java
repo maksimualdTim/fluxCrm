@@ -5,15 +5,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import uz.fluxCrm.fluxCrm.crm.dto.PipelineDto;
 import uz.fluxCrm.fluxCrm.crm.dto.StatusDto;
+import uz.fluxCrm.fluxCrm.crm.entity.Lead;
 import uz.fluxCrm.fluxCrm.crm.entity.Pipeline;
 import uz.fluxCrm.fluxCrm.crm.entity.Status;
 import uz.fluxCrm.fluxCrm.crm.mapper.PipelineMapper;
 import uz.fluxCrm.fluxCrm.crm.mapper.StatusMapper;
+import uz.fluxCrm.fluxCrm.crm.repository.LeadRepository;
 import uz.fluxCrm.fluxCrm.crm.repository.PipelineRepository;
 import uz.fluxCrm.fluxCrm.crm.repository.StatusRepository;
 
@@ -21,16 +24,46 @@ import uz.fluxCrm.fluxCrm.crm.repository.StatusRepository;
 @AllArgsConstructor
 public class DefaultPipelineService implements PipelineService{
     private final PipelineRepository pipelineRepository;
+    private final LeadRepository leadRepository;
+    
+    @Override
+    public void deletePipeline(Long id) {
+        Pipeline pipeline = findById(id);
+        pipelineRepository.delete(pipeline);
+    }
+
+
+    @Override
+    public void deleteStatus(Long pipelineId, Long statusId) {
+        Pipeline pipeline = findById(pipelineId);
+        Status status = getStatus(pipeline, statusId);
+
+        if(status.isMain()) {
+            throw new IllegalArgumentException("Status " + status.getName() + " with ID: " + statusId + " is main");
+        }
+
+        Status mainStatus = pipeline.getStatuses()
+        .stream()
+        .filter(Status::isMain)
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("Main status not found in pipeline"));
+
+        List<Lead> leadsToReassign = status.getLeads();
+
+        for (Lead lead : leadsToReassign) {
+            lead.setStatus(mainStatus);
+        }
+
+        leadRepository.saveAll(leadsToReassign);
+
+        pipeline.getStatuses().remove(status);
+        statusRepository.delete(status);
+    }
+
     private final PipelineMapper pipelineMapper;
 
     private final StatusRepository statusRepository;
     private final StatusMapper statusMapper;
-
-    public Pipeline createDefault() {
-        Pipeline pipeline = new Pipeline();
-        pipeline.setName("Воронка");
-        return pipelineRepository.save(pipeline);
-    }
 
     @Override
     public Pipeline findById(Long id) {
@@ -62,9 +95,35 @@ public class DefaultPipelineService implements PipelineService{
     }
 
     @Override
+    @Transactional
     public Pipeline createPipeline(String name) {
         Pipeline pipeline = new Pipeline();
         pipeline.setName(name);
+
+        List<Status> statuses = new ArrayList<Status>();
+
+        String[] defaultStatuses = new String[]{
+            "Первичный контак", 
+            "Отправили договор", 
+            "Переговоры", 
+            "Принимают решение", 
+            "Успешно реализовано", 
+            "Закрыто и не реализовано"
+        };
+    
+        int i = 0;
+        for (String statusName : defaultStatuses) {
+            Status status = new Status();
+            status.setName(statusName);
+            if(i == 0) {
+                status.setMain(true);
+            }
+            status.setPipeline(pipeline);
+            statuses.add(status);
+            i++;
+        }
+        pipeline.setStatuses(statuses);
+        
         return pipelineRepository.save(pipeline);
     }
 
@@ -78,20 +137,6 @@ public class DefaultPipelineService implements PipelineService{
     @Override
     public PipelineDto updatePipelineDto(String name, Long pipelineId) {
         return pipelineMapper.toResponse(updatePipeline(name, pipelineId));
-    }
-
-
-    @Override
-    public List<Status> createDefaultStatuses(Pipeline pipeline) {
-        List<Status> statuses = new ArrayList<Status>();
-        String[] defaultStatuses = new String[]{"Первичный контак", "Отправили договор", "Переговоры", "Принимают решение", "Успешно реализовано", "Закрыто и не реализовано"};
-        for (String statusName : defaultStatuses) {
-            Status status = new Status();
-            status.setName(statusName);
-            status.setPipeline(pipeline);
-        }
-
-        return statusRepository.saveAll(statuses);
     }
 
     @Override

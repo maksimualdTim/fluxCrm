@@ -1,8 +1,8 @@
 package uz.fluxCrm.fluxCrm.crm.entity;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -31,7 +31,7 @@ public class Contact {
 
     @ManyToMany(mappedBy = "contacts")
     @JsonBackReference
-    private Set<Lead> leads = new HashSet<>();
+    private List<Lead> leads = new ArrayList<Lead>();
 
     @ManyToOne
     @JoinColumn(name = "company_id")

@@ -13,12 +13,12 @@ services:
   #     - DB_USERNAME=postgres
   #     - DB_PASSWORD=postgres
 
-  fronted:
-    build: ./frontend
-    ports:
-      - "3000:3000"
-    volumes: 
-      - ./frontend:/app
+  # fronted:
+  #   build: ./frontend
+  #   ports:
+  #     - "3000:3000"
+  #   volumes: 
+  #     - ./frontend:/app
 
   db:
     image: postgres:latest

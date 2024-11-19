@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +43,17 @@ public class LeadsController {
 		return leadService.findByIdDto(id);
 	}
 
+	@PatchMapping("/{id}")
+	public LeadDto updateLead(@PathVariable Long id, @Valid LeadDto leadDto) {
+		return leadService.updateDto(leadDto, id);
+	}
+
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteLead(@PathVariable Long id) {
+		leadService.delete(id);
+	}
+
 	@PostMapping({"", "/"})
 	@ResponseStatus(HttpStatus.CREATED)
 	public LeadDto createLead(@Valid @RequestBody LeadDto leadDto) {		
@@ -68,6 +80,12 @@ public class LeadsController {
 	public PipelineDto updatePipeline(@PathVariable Long pipelineId, @Valid @RequestBody PipelineDto pipelineDto) {
 		return pipelineService.updatePipelineDto(pipelineDto.getName(), pipelineId);
 	}
+
+	@DeleteMapping("/pipelines/{pipelineId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deletePipeline(@PathVariable Long pipelineId) {
+		pipelineService.deletePipeline(pipelineId);
+	}
 	
 	@GetMapping("/pipelines/{pipelineId}/statuses")
 	public List<StatusDto> getStatuses(@PathVariable Long pipelineId) {
@@ -90,5 +108,11 @@ public class LeadsController {
 	@PatchMapping("/pipelines/{pipelineId}/statuses/{statusId}")
 	public StatusDto updateStatus(@PathVariable Long pipelineId, @PathVariable Long statusId, @Valid @RequestBody StatusDto statusDto) {
 		return pipelineService.updateStatusDto(statusDto.getName(), pipelineId, statusId);
+	}
+
+	@DeleteMapping("/pipelines/{pipelineId}/statuses/{statusId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteStatus(@PathVariable Long pipelineId, @PathVariable Long statusId) {
+		pipelineService.deleteStatus(pipelineId, statusId);
 	}
 }

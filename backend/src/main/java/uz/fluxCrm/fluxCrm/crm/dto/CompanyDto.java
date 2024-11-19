@@ -16,9 +16,9 @@ public class CompanyDto {
 
     private String name;
 
-    private List<LeadDto> leads;
+    private List<LeadDtoSimple> leads;
     
-    private List<ContactDto> contacts;
+    private List<ContactDtoSimple> contacts;
 
     @JsonProperty("created_at")
     @PastOrPresent(message = "The created_at date must be in the past or present")

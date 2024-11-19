@@ -8,4 +8,4 @@ COPY src ./src
 
 RUN ./mvnw dependency:go-offline
 
-CMD ["./mvnw", "spring-boot:run"]
+CMD ["./mvnw", "clean", "spring-boot:run"]

@@ -1,4 +1,4 @@
-package uz.fluxCrm.fluxCrm.crm.controller;
+package uz.fluxCrm.fluxCrm.crm.unit.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.persistence.EntityNotFoundException;
+import uz.fluxCrm.fluxCrm.crm.controller.LeadsController;
 import uz.fluxCrm.fluxCrm.crm.dto.LeadDto;
 import uz.fluxCrm.fluxCrm.crm.dto.PipelineDto;
 import uz.fluxCrm.fluxCrm.crm.dto.StatusDto;
@@ -255,7 +256,6 @@ public class LeadsControllerTest {
         pipelineDto.setName("Test Pipeline");
 
         when(pipelineService.createPipelineDto(anyString())).thenReturn(TestObjectFactory.createTestPipelineDto());
-        when(pipelineService.createDefaultStatuses(any(Pipeline.class))).thenReturn(List.of(TestObjectFactory.createStatus()));
 
         mockMvc.perform(post("/leads/pipelines")
         .contentType(MediaType.APPLICATION_JSON)

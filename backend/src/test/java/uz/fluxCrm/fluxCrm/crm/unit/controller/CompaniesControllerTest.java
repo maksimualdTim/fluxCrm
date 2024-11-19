@@ -1,4 +1,4 @@
-package uz.fluxCrm.fluxCrm.crm.controller;
+package uz.fluxCrm.fluxCrm.crm.unit.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import uz.fluxCrm.fluxCrm.crm.controller.CompaniesController;
 import uz.fluxCrm.fluxCrm.crm.dto.CompanyDto;
 import uz.fluxCrm.fluxCrm.crm.service.CompanyService;
 import uz.fluxCrm.fluxCrm.crm.util.TestObjectFactory;

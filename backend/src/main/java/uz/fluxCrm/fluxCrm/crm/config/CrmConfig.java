@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import uz.fluxCrm.fluxCrm.crm.entity.Pipeline;
 import uz.fluxCrm.fluxCrm.crm.service.PipelineService;
 
 @Configuration
@@ -14,8 +13,7 @@ public class CrmConfig {
     @Bean
     CommandLineRunner initPipeline(PipelineService pipelineService) {
         return args -> {
-			Pipeline pipeline = pipelineService.createDefault();
-			pipelineService.createDefaultStatuses(pipeline);
+			pipelineService.createPipeline("Воронка");
         };
     }	
 }

@@ -23,4 +23,8 @@ public interface LeadService {
     public LeadDto createLeadDto(LeadDto leadDto);
 
     public LeadDto createLeadDto(Lead leadDto);
+
+    public LeadDto updateDto(LeadDto leadDto, Long id);
+
+    public void delete(Long id);
 }

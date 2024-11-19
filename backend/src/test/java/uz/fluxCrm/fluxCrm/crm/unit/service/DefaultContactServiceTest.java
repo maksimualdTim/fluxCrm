@@ -1,4 +1,4 @@
-package uz.fluxCrm.fluxCrm.crm.service;
+package uz.fluxCrm.fluxCrm.crm.unit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,6 +28,7 @@ import uz.fluxCrm.fluxCrm.crm.dto.ContactDto;
 import uz.fluxCrm.fluxCrm.crm.entity.Contact;
 import uz.fluxCrm.fluxCrm.crm.mapper.ContactMapper;
 import uz.fluxCrm.fluxCrm.crm.repository.ContactRepository;
+import uz.fluxCrm.fluxCrm.crm.service.DefaultContactService;
 import uz.fluxCrm.fluxCrm.crm.util.TestObjectFactory;
 
 @ExtendWith(MockitoExtension.class)

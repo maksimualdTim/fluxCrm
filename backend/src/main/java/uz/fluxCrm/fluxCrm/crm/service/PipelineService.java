@@ -9,8 +9,6 @@ import uz.fluxCrm.fluxCrm.crm.entity.Status;
 
 public interface PipelineService {
 
-    public Pipeline createDefault();
-
     public List<PipelineDto> getPipelinesDto();
 
     public List<Pipeline> getPipelines();
@@ -27,10 +25,9 @@ public interface PipelineService {
 
     public Pipeline updatePipeline(String name, Long pipelineId);
 
-    
-    
-    public List<Status> createDefaultStatuses(Pipeline pipeline);
+    public void deletePipeline(Long id);
 
+    
     public List<StatusDto> getStatusesDto(Pipeline pipeline);
 
     public StatusDto getStatusDto(Pipeline pipeline, Long id);
@@ -44,4 +41,6 @@ public interface PipelineService {
     public Status updateStatus(String name, Long pipelineId, Long statusId);
 
     public StatusDto updateStatusDto(String name, Long pipelineId, Long statusId);
+
+    public void deleteStatus(Long pipelineId, Long statusId);
 }

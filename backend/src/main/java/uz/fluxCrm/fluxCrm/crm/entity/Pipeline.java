@@ -23,6 +23,8 @@ public class Pipeline {
 
     private String name;
 
+    private boolean isMain;
+
     @OneToMany(mappedBy = "pipeline", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Status> statuses;

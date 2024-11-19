@@ -1,4 +1,4 @@
-package uz.fluxCrm.fluxCrm.crm.service;
+package uz.fluxCrm.fluxCrm.crm.unit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,6 +28,7 @@ import uz.fluxCrm.fluxCrm.crm.mapper.PipelineMapper;
 import uz.fluxCrm.fluxCrm.crm.mapper.StatusMapper;
 import uz.fluxCrm.fluxCrm.crm.repository.PipelineRepository;
 import uz.fluxCrm.fluxCrm.crm.repository.StatusRepository;
+import uz.fluxCrm.fluxCrm.crm.service.DefaultPipelineService;
 import uz.fluxCrm.fluxCrm.crm.util.TestObjectFactory;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,52 +60,6 @@ public class DefaultPipelineServiceTest {
         assertEquals("Test Pipeline", result.getName());
         assertEquals(1L, result.getId());
         verify(pipelineRepository, times(1)).save(any(Pipeline.class));
-    }
-
-    @Test
-    void testCreateDefault_ReturnsPipeline() {
-        Pipeline expectedPipeline = TestObjectFactory.createPipeline();
-        expectedPipeline.setName("Воронка");
-
-        when(pipelineRepository.save(any(Pipeline.class))).thenReturn(expectedPipeline);
-
-        Pipeline result = pipelineService.createDefault();
-
-        assertEquals("Воронка", result.getName());
-        verify(pipelineRepository, times(1)).save(any(Pipeline.class));
-    }
-
-
-    @Test
-    void testCreateDefaultStatuses_ReturnsStatuses() {
-        Pipeline pipeline = new Pipeline();
-        pipeline.setId(1L);
-
-        List<Status> expectedStatuses = new ArrayList<Status>();
-        String[] defaultStatuses = new String[]{"Первичный контак", "Отправили договор", "Переговоры", "Принимают решение", "Успешно реализовано", "Закрыто и не реализовано"};
-        for (String statusName : defaultStatuses) {
-            Status status = new Status();
-            status.setName(statusName);
-            status.setPipeline(pipeline);
-            expectedStatuses.add(status);
-        }
-
-        when(statusRepository.saveAll(anyList())).thenReturn(expectedStatuses);
-
-        List<Status> createdStatuses = pipelineService.createDefaultStatuses(pipeline);
-
-        verify(statusRepository, times(1)).saveAll(anyList());
-
-        assertEquals(6, createdStatuses.size(), "6 statuses should be created");
-
-        createdStatuses.forEach(status -> assertEquals(pipeline, status.getPipeline()));
-
-        assertEquals("Первичный контак", createdStatuses.get(0).getName());
-        assertEquals("Отправили договор", createdStatuses.get(1).getName());
-        assertEquals("Переговоры", createdStatuses.get(2).getName());
-        assertEquals("Принимают решение", createdStatuses.get(3).getName());
-        assertEquals("Успешно реализовано", createdStatuses.get(4).getName());
-        assertEquals("Закрыто и не реализовано", createdStatuses.get(5).getName());
     }
 
     @Test

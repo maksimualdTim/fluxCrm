@@ -1,8 +1,8 @@
 package uz.fluxCrm.fluxCrm.crm.entity;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -46,7 +46,7 @@ public class Lead {
         inverseJoinColumns = @JoinColumn(name = "contact_id")
     )
     @JsonIgnoreProperties("lead")
-    private Set<Contact> contacts = new HashSet<>();
+    private List<Contact> contacts = new ArrayList<Contact>();
 
     @ManyToOne
     @JoinColumn(name = "company_id")

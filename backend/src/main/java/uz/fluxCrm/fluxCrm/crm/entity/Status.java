@@ -25,6 +25,8 @@ public class Status {
 
     private String name;
 
+    private boolean isMain;
+
     @ManyToOne
     @JoinColumn(name = "pipeline_id")
     @JsonBackReference

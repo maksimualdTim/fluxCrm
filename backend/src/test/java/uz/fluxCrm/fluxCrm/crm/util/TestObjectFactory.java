@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import uz.fluxCrm.fluxCrm.crm.dto.CompanyDto;
+import uz.fluxCrm.fluxCrm.crm.dto.CompanyDtoSimple;
 import uz.fluxCrm.fluxCrm.crm.dto.ContactDto;
+import uz.fluxCrm.fluxCrm.crm.dto.ContactDtoSimple;
 import uz.fluxCrm.fluxCrm.crm.dto.LeadDto;
 import uz.fluxCrm.fluxCrm.crm.dto.PipelineDto;
 import uz.fluxCrm.fluxCrm.crm.dto.StatusDto;
@@ -91,6 +93,15 @@ public class TestObjectFactory {
         return companyDto;
     }
 
+    public static CompanyDtoSimple createCompanyDtoSimple() {
+        CompanyDtoSimple companyDto = new CompanyDtoSimple();
+        companyDto.setId(1L);
+        companyDto.setName("Test Company");
+        companyDto.setCreatedAt(LocalDateTime.of(2024, 1, 3, 10, 32));
+        companyDto.setUpdatedAt(LocalDateTime.of(2024, 1, 3, 10, 32));
+        return companyDto;
+    }
+
     public static Contact createContact() {
         Contact contact = new Contact();
         contact.setId(1L);
@@ -102,6 +113,15 @@ public class TestObjectFactory {
 
     public static ContactDto createContactDto() {
         ContactDto contactDto = new ContactDto();
+        contactDto.setId(1L);
+        contactDto.setName("Test Contact");
+        contactDto.setCreatedAt(LocalDateTime.of(2024, 1, 3, 10, 32));
+        contactDto.setUpdatedAt(LocalDateTime.of(2024, 1, 3, 10, 32));
+        return contactDto;
+    }
+
+    public static ContactDtoSimple createContactDtoSimple() {
+        ContactDtoSimple contactDto = new ContactDtoSimple();
         contactDto.setId(1L);
         contactDto.setName("Test Contact");
         contactDto.setCreatedAt(LocalDateTime.of(2024, 1, 3, 10, 32));
