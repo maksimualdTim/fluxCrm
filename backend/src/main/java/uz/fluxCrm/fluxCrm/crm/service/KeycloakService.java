@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import jakarta.ws.rs.core.Response;
+import uz.fluxCrm.fluxCrm.crm.exception.UserAlreadyExistsException;
 
 @Service
 public class KeycloakService {
@@ -42,13 +43,26 @@ public class KeycloakService {
 
         user.setCredentials(Collections.singletonList(credentials));
 
-        Response response = keycloak.realm(realm).users().create(user);
-
-        String location = response.getHeaderString("Location");
-
-        String uuid = location.substring(location.lastIndexOf("/") + 1);
-        response.close();
-        return UUID.fromString(uuid);
+        Response response = null;
+        try {
+            response = keycloak.realm(realm).users().create(user);
+    
+            if (response.getStatus() == 201) {
+                String location = response.getHeaderString("Location");
+                String uuid = location.substring(location.lastIndexOf("/") + 1);
+                return UUID.fromString(uuid);
+            } else if (response.getStatus() == 409) {
+                throw new UserAlreadyExistsException("User already exists with email " + email);
+            } else {
+                throw new RuntimeException("Ошибка при создании пользователя: " + response.getStatus());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error while creating user: " + e.getMessage(), e);
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
     }
 
     public void createGroup(String groupName) {

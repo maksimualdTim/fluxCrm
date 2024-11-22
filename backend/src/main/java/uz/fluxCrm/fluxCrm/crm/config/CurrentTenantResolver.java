@@ -1,7 +1,6 @@
 package uz.fluxCrm.fluxCrm.crm.config;
 
 import java.util.Map;
-import java.util.Objects;
 
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
