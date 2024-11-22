@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import uz.fluxCrm.fluxCrm.crm.config.TenantContext;
 import uz.fluxCrm.fluxCrm.crm.dto.CompanyDto;
 import uz.fluxCrm.fluxCrm.crm.entity.Company;
 import uz.fluxCrm.fluxCrm.crm.mapper.CompanyMapper;

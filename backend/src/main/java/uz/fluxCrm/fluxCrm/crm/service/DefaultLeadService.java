@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import uz.fluxCrm.fluxCrm.crm.config.TenantContext;
 import uz.fluxCrm.fluxCrm.crm.dto.LeadDto;
 import uz.fluxCrm.fluxCrm.crm.entity.Company;
 import uz.fluxCrm.fluxCrm.crm.entity.Contact;
@@ -61,6 +62,9 @@ public class DefaultLeadService implements LeadService{
         }
         
         List<Contact> contacts = lead.getContacts();
+        for (Contact contact : contacts) {
+            contact.setAccountId(TenantContext.getCurrentAccountId());
+        }
         if(!contacts.isEmpty()) {
             contacts = contactRepository.saveAll(contacts);
             lead.setContacts(contacts);

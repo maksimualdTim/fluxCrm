@@ -55,7 +55,7 @@ public class DefaultPipelineServiceTest {
 
         when(pipelineRepository.save(any(Pipeline.class))).thenReturn(expectedPipeline);
 
-        Pipeline result = pipelineService.createPipeline("Test Pipeline");
+        Pipeline result = pipelineService.createPipeline("Test Pipeline", false);
 
         assertEquals("Test Pipeline", result.getName());
         assertEquals(1L, result.getId());

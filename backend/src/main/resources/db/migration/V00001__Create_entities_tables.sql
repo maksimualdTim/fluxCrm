@@ -1,0 +1,80 @@
+CREATE TABLE account (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    subdomain VARCHAR(255) NOT NULL,
+    language VARCHAR(10) NOT NULL,
+    timezone VARCHAR(50) NOT NULL,
+    currency VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+CREATE TABLE pipeline (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    is_main BOOLEAN NOT NULL DEFAULT FALSE,
+    account_id BIGINT NOT NULL,
+    CONSTRAINT fk_pipeline_account FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE
+);
+
+CREATE TABLE status (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    is_main BOOLEAN NOT NULL DEFAULT FALSE,
+    pipeline_id BIGINT NOT NULL,
+    account_id BIGINT NOT NULL,
+    CONSTRAINT fk_status_pipeline FOREIGN KEY (pipeline_id) REFERENCES pipeline (id) ON DELETE CASCADE,
+    CONSTRAINT fk_status_account FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE
+);
+
+CREATE TABLE company (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    account_id BIGINT NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_company_account FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE
+);
+
+CREATE TABLE lead (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price BIGINT DEFAULT 0,
+    status_id BIGINT,
+    company_id BIGINT,
+    account_id BIGINT NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_lead_status FOREIGN KEY (status_id) REFERENCES status (id) ON DELETE SET NULL,
+    CONSTRAINT fk_lead_company FOREIGN KEY (company_id) REFERENCES company (id) ON DELETE SET NULL,
+    CONSTRAINT fk_lead_account FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE
+);
+
+CREATE TABLE contact (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    company_id BIGINT,
+    account_id BIGINT NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_contact_company FOREIGN KEY (company_id) REFERENCES company (id) ON DELETE SET NULL,
+    CONSTRAINT fk_contact_account FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE
+);
+
+CREATE TABLE lead_contact (
+    lead_id BIGINT NOT NULL,
+    contact_id BIGINT NOT NULL,
+    PRIMARY KEY (lead_id, contact_id),
+    CONSTRAINT fk_lead_contact_lead FOREIGN KEY (lead_id) REFERENCES lead (id) ON DELETE CASCADE,
+    CONSTRAINT fk_lead_contact_contact FOREIGN KEY (contact_id) REFERENCES contact (id) ON DELETE CASCADE
+);
+
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    account_id BIGINT NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    keycloak_id UUID NOT NULL,
+    CONSTRAINT fk_user_account FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE
+);

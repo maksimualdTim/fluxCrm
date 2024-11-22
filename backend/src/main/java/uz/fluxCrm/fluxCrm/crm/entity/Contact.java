@@ -33,6 +33,9 @@ public class Contact {
     @JsonBackReference
     private List<Lead> leads = new ArrayList<Lead>();
 
+    @Column(name = "account_id")
+    private Long accountId;
+
     @ManyToOne
     @JoinColumn(name = "company_id")
     @JsonBackReference

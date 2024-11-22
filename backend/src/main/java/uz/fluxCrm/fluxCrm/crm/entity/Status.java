@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +28,9 @@ public class Status {
 
     private boolean isMain;
 
+    @Column(name = "account_id")
+    private Long accountId;
+    
     @ManyToOne
     @JoinColumn(name = "pipeline_id")
     @JsonBackReference

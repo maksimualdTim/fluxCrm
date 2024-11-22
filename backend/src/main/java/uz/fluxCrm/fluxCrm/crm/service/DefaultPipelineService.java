@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import uz.fluxCrm.fluxCrm.crm.config.TenantContext;
 import uz.fluxCrm.fluxCrm.crm.dto.PipelineDto;
 import uz.fluxCrm.fluxCrm.crm.dto.StatusDto;
 import uz.fluxCrm.fluxCrm.crm.entity.Lead;
@@ -25,7 +26,7 @@ import uz.fluxCrm.fluxCrm.crm.repository.StatusRepository;
 public class DefaultPipelineService implements PipelineService{
     private final PipelineRepository pipelineRepository;
     private final LeadRepository leadRepository;
-    
+
     @Override
     public void deletePipeline(Long id) {
         Pipeline pipeline = findById(id);
@@ -85,20 +86,21 @@ public class DefaultPipelineService implements PipelineService{
 
     @Override
     public List<PipelineDto> getPipelinesDto() {
-        List<Pipeline> pipelines = pipelineRepository.findAll();
+        List<Pipeline> pipelines = getPipelines();
         return pipelineMapper.toResponse(pipelines);
     }
 
     @Override
     public PipelineDto createPipelineDto(String name) {
-        return pipelineMapper.toResponse(createPipeline(name));
+        return pipelineMapper.toResponse(createPipeline(name, false));
     }
 
     @Override
     @Transactional
-    public Pipeline createPipeline(String name) {
+    public Pipeline createPipeline(String name, boolean isMain) {
         Pipeline pipeline = new Pipeline();
         pipeline.setName(name);
+        pipeline.setMain(isMain);
 
         List<Status> statuses = new ArrayList<Status>();
 
@@ -119,6 +121,7 @@ public class DefaultPipelineService implements PipelineService{
                 status.setMain(true);
             }
             status.setPipeline(pipeline);
+            status.setAccountId(TenantContext.getCurrentAccountId());
             statuses.add(status);
             i++;
         }

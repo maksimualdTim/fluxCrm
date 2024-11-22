@@ -1,18 +1,45 @@
 services:
-  # backend:
-  #   build: ./backend
-  #   ports: 
-  #     - "8080:8080"
-  #   volumes:
-  #     - ./backend:/app
-  #     - maven-repo:/root/.m2
-  #   environment:
-  #     - DB_HOST=db
-  #     - DB_PORT=5432
-  #     - DB_NAME=fluxcrm
-  #     - DB_USERNAME=postgres
-  #     - DB_PASSWORD=postgres
+  localhost:
+    image: alpine:latest
+    command: sleep infinity
+    ports:
+    - "8090:8090" # keycloak
+    - "8080:8080" # app
 
+  backend:
+    build: ./backend
+    volumes:
+      - ~/.m2:/root/.m2
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=fluxcrm
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - KEYCLOAK_HOST=localhost
+      - KEYCLOAK_PORT=8090
+    depends_on:
+      - keycloak
+      - db
+    network_mode: "service:localhost"
+  keycloak:
+    image: keycloak/keycloak:26.0
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloakdb:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      ENV KC_HEALTH_ENABLED: true
+      ENV KC_METRICS_ENABLED: true
+    command: [
+      "start-dev",
+      "--http-port=8090"
+    ]
+    network_mode: "service:localhost"
+    depends_on:
+    - keycloakdb
   # fronted:
   #   build: ./frontend
   #   ports:
@@ -21,7 +48,7 @@ services:
   #     - ./frontend:/app
 
   db:
-    image: postgres:latest
+    image: postgres:17
     ports:
       - "5432:5432"
     environment:
@@ -42,11 +69,22 @@ services:
       - db
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+  keycloakdb:
+    image: postgres:17
+    ports:
+      - "5433:5432" # Используйте другой порт, чтобы не конфликтовать с основной базой данных
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    volumes:
+      - keycloak-postgres-data:/var/lib/postgresql/data
+
 
 volumes:
-  maven-repo:
-    driver: local
   postgres-data:
     driver: local
   pgadmin-data:
+    driver: local
+  keycloak-postgres-data:
     driver: local

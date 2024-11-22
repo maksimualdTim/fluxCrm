@@ -1,11 +1,9 @@
-FROM eclipse-temurin:21-jdk-noble
+FROM eclipse-temurin:21-jre-noble
 
 WORKDIR /app
 
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-COPY src ./src
+EXPOSE 8080
 
-RUN ./mvnw dependency:go-offline
+COPY target/*.jar /app/app.jar
 
-CMD ["./mvnw", "clean", "spring-boot:run"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

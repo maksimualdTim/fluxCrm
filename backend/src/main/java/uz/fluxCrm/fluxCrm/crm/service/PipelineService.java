@@ -19,7 +19,7 @@ public interface PipelineService {
 
     public PipelineDto createPipelineDto(String name);
 
-    public Pipeline createPipeline(String name);
+    public Pipeline createPipeline(String name, boolean isMain);
 
     public PipelineDto updatePipelineDto(String name, Long pipelineId);
 

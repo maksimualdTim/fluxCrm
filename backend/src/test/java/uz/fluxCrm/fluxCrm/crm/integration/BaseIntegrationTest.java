@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ContextConfiguration;
 
+import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.restassured.RestAssured;
 import uz.fluxCrm.fluxCrm.crm.util.Postgres;
 
@@ -19,6 +20,8 @@ public abstract class BaseIntegrationTest {
     @BeforeAll
     static void initAll() {
         Postgres.postgres.start();
+        KeycloakContainer keycloakContainer = new KeycloakContainer();
+        keycloakContainer.start();
     }
 
     @BeforeEach
