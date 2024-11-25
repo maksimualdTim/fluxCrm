@@ -40,7 +40,15 @@ services:
       - "3000:3000"
     volumes: 
       - ./frontend:/app
-      - /app/node_modules
+      - front-dependencies:/app/node_modules
+    environment:
+      - KEYCLOAK_HOST=keycloak
+      - KEYCLOAK_PORT=8090
+      - NEXTAUTH_URL=http://localhost
+      - KEYCLOAK_ID=fluxcrm-frontend
+      - KEYCLOAK_SECRET=wKh0DPEHSCXkRog5CNy92AQHpk5SbPbo
+      - KEYCLOAK_ISSUER=http://keycloak:8090/realms/fluxcrm
+      - AUTH_SECRET=3IWmkuEpFhifc/e4QVd0AFLVyDxi9li2PVs88xZG250=
 
   db:
     image: postgres:17
@@ -91,4 +99,6 @@ volumes:
   pgadmin-data:
     driver: local
   keycloak-postgres-data:
+    driver: local
+  front-dependencies:
     driver: local
